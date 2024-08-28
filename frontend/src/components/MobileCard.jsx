@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const MobileCard = ({ mobile }) => {
   return (
-    <div className="mobile-card p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <div className="mobile-card p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
       <div className=" overflow-hidden">
         <img
           src={mobile.image}
