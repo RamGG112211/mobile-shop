@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mobile-card img {
+  transition: transform 0.3s;
+}
+
+.mobile-card:hover img {
+  transform: scale(1.05);
+}
+
+.mobile-card h3 {
+  transition: color 0.3s;
+}
+
+.mobile-card:hover h3 {
+  color: #1a73e8;
+}
