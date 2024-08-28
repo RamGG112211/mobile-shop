@@ -51,7 +51,8 @@ This project is a React.js application for a mobile shop, showcasing various mob
     ```
 
 4.  Folder Structure
-    ``bash
+
+```bash
     ├── public
     │ └── index.html
     ├── src
@@ -66,7 +67,7 @@ This project is a React.js application for a mobile shop, showcasing various mob
     ├── .eslintrc.js
     └── package.json
 
-            ```
+```
 
     - components/MobileCard.js: A component to display individual mobile phone details in a card format.
 
