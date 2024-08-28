@@ -31,11 +31,10 @@ This project is a React.js application for a mobile shop, showcasing various mob
 
 ## Installation
 
-1.  Clone the repository:
+1.  Create React project with Vite:
 
 ```bash
-    git clone https://github.com/your-username/mobile-shop.git
-    cd mobile-shop/frontend
+    npm create vite@latest my-react-app
 ```
 
 2.  Install dependencies:
