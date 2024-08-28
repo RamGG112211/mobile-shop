@@ -33,22 +33,22 @@ This project is a React.js application for a mobile shop, showcasing various mob
 
 1.  Clone the repository:
 
-    ```bash
+```bash
     git clone https://github.com/your-username/mobile-shop.git
-    cd mobile-shop
-    ```
+    cd mobile-shop/frontend
+```
 
 2.  Install dependencies:
 
-    ```bash
+```bash
     npm install
-    ```
+```
 
 3.  Run the application:
 
-    ```bash
+```bash
     npm run dev
-    ```
+```
 
 4.  Folder Structure
 
