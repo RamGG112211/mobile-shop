@@ -69,11 +69,11 @@ This project is a React.js application for a mobile shop, showcasing various mob
 
 ```
 
-    - components/MobileCard.js: A component to display individual mobile phone details in a card format.
+- components/MobileCard.js: A component to display individual mobile phone details in a card format.
 
-    - pages/Home.js: The homepage where all mobile phones are displayed in a grid.
+- pages/Home.js: The homepage where all mobile phones are displayed in a grid.
 
-    - pages/MobileDetails.js: A detailed page for each mobile phone, accessible by clicking the "View Details" button.
+- pages/MobileDetails.js: A detailed page for each mobile phone, accessible by clicking the "View Details" button.
 
 # MobileCard component
 
