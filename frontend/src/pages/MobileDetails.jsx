@@ -9,8 +9,12 @@ const MobileDetails = () => {
   useEffect(() => {
     const fetchMobile = async () => {
       try {
-        const response = await axios.get(`http://localhost:5001/api/v1/products/${id}`);
-        setMobile(response.data);
+        const response = await axios.get(
+          `http://localhost:5001/api/v1/products/${id}`
+        );
+        if (response.data.success) {
+          setMobile(response.data.product);
+        }
       } catch (error) {
         console.error("Error fetching mobile details", error);
       }
