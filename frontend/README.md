@@ -326,7 +326,7 @@ This project is a React.js application for a mobile shop, showcasing various mob
         e.preventDefault();
         try {
         const response = await axios.post(
-            "http://localhost:5001/api/v1/products/new",
+            "http://192.168.100.11:5001/api/v1/products/new",
             product,
             {
             headers: {
@@ -462,7 +462,7 @@ This project is a React.js application for a mobile shop, showcasing various mob
     const fetchMobiles = async () => {
         try {
         const response = await axios.get(
-            "http://192.168.18.27:5001/api/v1/products/"
+            "http://192.168.100.11:5001/api/v1/products/"
         );
         setMobiles(response.data.products);
         console.log(response.data);
@@ -479,7 +479,7 @@ This project is a React.js application for a mobile shop, showcasing various mob
         // Assuming you have a function to handle adding the product to the backend
         // You would call fetchMobiles here to refresh the product list after adding a new product
         axios
-        .post("http://localhost:5001/api/v1/products/", product)
+        .post("http://192.168.100.11:5001/api/v1/products/", product)
         .then(() => {
             fetchMobiles(); // Refresh the product list
         })
@@ -552,7 +552,7 @@ This project is a React.js application for a mobile shop, showcasing various mob
         e.preventDefault();
         try {
         const response = await axios.put(
-            `http://localhost:5001/api/v1/products/${mobile._id}`,
+            `http://192.168.100.11:5001/api/v1/products/${mobile._id}`,
             product,
             {
             headers: {
@@ -685,7 +685,7 @@ This project is a React.js application for a mobile shop, showcasing various mob
         e.preventDefault();
         try {
         const response = await axios.delete(
-            `http://localhost:5001/api/v1/products/${mobile._id}`
+            `http://192.168.100.11:5001/api/v1/products/${mobile._id}`
         );
         console.log(response.data); // Handle the response data as needed
         } catch (error) {

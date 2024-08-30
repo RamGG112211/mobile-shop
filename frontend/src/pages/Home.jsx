@@ -10,7 +10,7 @@ const Home = () => {
   const fetchMobiles = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.18.27:5001/api/v1/products/"
+        "http://192.168.100.11:5001/api/v1/products/"
       );
       setMobiles(response.data.products);
       console.log(response.data);
