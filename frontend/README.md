@@ -109,6 +109,45 @@ This project is a React.js application for a mobile shop, showcasing various mob
 
 ```
 
+# update button component
+
+```bash
+    import React from "react";
+    import { AiTwotoneEdit } from "react-icons/ai";
+
+    export default function UpdateButton({onClick ,className}:{onClick:()=>void, className?:string}) {
+    return (
+        <button
+        className={`p-2 bg-green-400/10 border-green-400/10 dark:border-yoga-yoga/10 text-green-400 rounded hover:bg-green-400/20 border hover:border-green-400/50 transition-all duration-400 ${className}`}
+        onClick={onClick}
+        >
+        <AiTwotoneEdit size={18} />
+        </button>
+    );
+    }
+
+
+```
+
+# delete button component
+
+```bash
+    import { Trash2 } from "lucide-react";
+    import React from "react";
+
+    export default function DeleteButton({ onClick, className }: { onClick?: () => void, className?:string }) {
+    return (
+        <button
+        className={` p-2 bg-red-400/10 border-red-400/10 text-red-400 rounded hover:bg-red-400/20 border hover:border-red-400/50 transition-all duration-400 ${className}`}
+        onClick={onClick}
+        >
+        <Trash2 size={16} />
+        </button>
+    );
+    }
+
+```
+
 # Home component (page)
 
 ```bash
@@ -248,4 +287,445 @@ This project is a React.js application for a mobile shop, showcasing various mob
     };
 
     export default MobileDetails;
+```
+
+# Add product dialog component
+
+```bash
+    import React, { useState } from "react";
+    import Dialog from "@mui/material/Dialog";
+    import { RxCross2 } from "react-icons/rx";
+    import Slide from "@mui/material/Slide";
+    import Button from "@mui/material/Button";
+    import axios from "axios"; // If you prefer axios
+
+    const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+    });
+
+    const AddProductModal = () => {
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [product, setProduct] = useState({
+        name: "",
+        price: "",
+        image: "",
+        shortDescription: "",
+        fullDescription: "",
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProduct({
+        ...product,
+        [name]: value,
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        console.log(product);
+        e.preventDefault();
+        try {
+        const response = await axios.post(
+            "http://localhost:5001/api/v1/products/new",
+            product,
+            {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            }
+        );
+        console.log(response.data); // Handle the response data as needed
+        setIsOpenModal(false);
+        setProduct({
+            name: "",
+            price: "",
+            image: "",
+            shortDescription: "",
+            fullDescription: "",
+        });
+        } catch (error) {
+        console.error("There was an error posting the product!", error);
+        }
+    };
+
+    return (
+        <div>
+        <Button className="" onClick={() => setIsOpenModal(true)}>
+            Add New Product
+        </Button>
+        <Dialog
+            open={isOpenModal}
+            onClose={() => setIsOpenModal(false)}
+            TransitionComponent={Transition}
+            maxWidth="sm"
+            fullWidth
+        >
+            <div
+            className="absolute top-3 right-[2rem] text-2xl cursor-pointer"
+            onClick={() => setIsOpenModal(false)}
+            >
+            <RxCross2 />
+            </div>
+            <div className="p-6 max-h-[80vh] overflow-y-auto">
+            <h3 className="text-xl font-medium mb-2">Add New Product</h3>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Name*"
+                    value={product.name}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="mb-4">
+                <input
+                    type="number"
+                    name="price"
+                    placeholder="Price*"
+                    value={product.price}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="mb-4">
+                <input
+                    type="text"
+                    name="image"
+                    placeholder="Image URL*"
+                    value={product.image}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="mb-4">
+                <textarea
+                    name="shortDescription"
+                    placeholder="Short Description*"
+                    value={product.shortDescription}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="mb-4">
+                <textarea
+                    name="fullDescription"
+                    placeholder="Full Description*"
+                    value={product.fullDescription}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="flex justify-end">
+                <Button type="submit" variant="contained" color="primary">
+                    Add Product
+                </Button>
+                <Button
+                    onClick={() => setIsOpenModal(false)}
+                    variant="outlined"
+                    color="secondary"
+                    className="ml-2"
+                >
+                    Cancel
+                </Button>
+                </div>
+            </form>
+            </div>
+        </Dialog>
+        </div>
+    );
+    };
+
+    export default AddProductModal;
+
+
+```
+
+# Updated Home component after api integration (page)
+
+```bash
+    import { useEffect, useState } from "react";
+    import axios from "axios";
+    import MobileCard from "../components/MobileCard";
+    import AddProductDialog from "../components/AddProductDialog";
+
+    const Home = () => {
+    const [mobiles, setMobiles] = useState([]);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const fetchMobiles = async () => {
+        try {
+        const response = await axios.get(
+            "http://192.168.18.27:5001/api/v1/products/"
+        );
+        setMobiles(response.data.products);
+        console.log(response.data);
+        } catch (error) {
+        console.error("Error fetching mobile phones", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchMobiles();
+    }, []);
+
+    const handleAddProduct = (product) => {
+        // Assuming you have a function to handle adding the product to the backend
+        // You would call fetchMobiles here to refresh the product list after adding a new product
+        axios
+        .post("http://localhost:5001/api/v1/products/", product)
+        .then(() => {
+            fetchMobiles(); // Refresh the product list
+        })
+        .catch((error) => {
+            console.error("Error adding product", error);
+        });
+    };
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8">
+            <h1 className="text-3xl font-bold text-blue-500">Mobile Shop</h1>
+            <AddProductDialog
+            isOpen={isDialogOpen}
+            onClose={() => setIsDialogOpen(false)}
+            onAddProduct={handleAddProduct}
+            />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
+            {mobiles &&
+            mobiles.map((mobile) => (
+                <MobileCard key={mobile._id} mobile={mobile} />
+            ))}
+        </div>
+        </div>
+    );
+    };
+
+    export default Home;
+
+```
+
+# Update Product Dialog component
+
+```bash
+   /* eslint-disable react/prop-types */
+    import React, { useState } from "react";
+    import Dialog from "@mui/material/Dialog";
+    import { RxCross2 } from "react-icons/rx";
+    import Slide from "@mui/material/Slide";
+    import Button from "@mui/material/Button";
+    import axios from "axios"; // If you prefer axios
+    import UpdateButton from "./updateButton";
+
+    const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+    });
+
+    const UpdateProductModal = ({ mobile }) => {
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [product, setProduct] = useState({
+        name: mobile.name,
+        price: mobile.price,
+        image: mobile.image,
+        shortDescription: mobile.shortDescription,
+        fullDescription: mobile.fullDescription,
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setProduct({
+        ...product,
+        [name]: value,
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        console.log(product);
+        e.preventDefault();
+        try {
+        const response = await axios.put(
+            `http://localhost:5001/api/v1/products/${mobile._id}`,
+            product,
+            {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            }
+        );
+        console.log(response.data); // Handle the response data as needed
+        setIsOpenModal(false);
+        setProduct({
+            name: "",
+            price: "",
+            image: "",
+            shortDescription: "",
+            fullDescription: "",
+        });
+        } catch (error) {
+        console.error("There was an error posting the product!", error);
+        }
+    };
+
+    return (
+        <div>
+        <UpdateButton onClick={() => setIsOpenModal(true)} />
+        <Dialog
+            open={isOpenModal}
+            onClose={() => setIsOpenModal(false)}
+            TransitionComponent={Transition}
+            maxWidth="sm"
+            fullWidth
+        >
+            <div
+            className="absolute top-3 right-[2rem] text-2xl cursor-pointer"
+            onClick={() => setIsOpenModal(false)}
+            >
+            <RxCross2 />
+            </div>
+            <div className="p-6 max-h-[80vh] overflow-y-auto">
+            <h3 className="text-xl font-medium mb-2">Add New Product</h3>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Name*"
+                    value={product.name}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="mb-4">
+                <input
+                    type="number"
+                    name="price"
+                    placeholder="Price*"
+                    value={product.price}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="mb-4">
+                <input
+                    type="text"
+                    name="image"
+                    placeholder="Image URL*"
+                    value={product.image}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="mb-4">
+                <textarea
+                    name="shortDescription"
+                    placeholder="Short Description*"
+                    value={product.shortDescription}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="mb-4">
+                <textarea
+                    name="fullDescription"
+                    placeholder="Full Description*"
+                    value={product.fullDescription}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                />
+                </div>
+                <div className="flex justify-end">
+                <Button type="submit" variant="contained" color="primary">
+                    Update Product
+                </Button>
+                <Button
+                    onClick={() => setIsOpenModal(false)}
+                    variant="outlined"
+                    color="secondary"
+                    className="ml-2"
+                >
+                    Cancel
+                </Button>
+                </div>
+            </form>
+            </div>
+        </Dialog>
+        </div>
+    );
+    };
+
+    export default UpdateProductModal;
+
+
+```
+
+# Updated mobile card component
+
+```bash
+    /* eslint-disable react/prop-types */
+    import { Link } from "react-router-dom";
+    import DeleteButton from "./deleteButton";
+    import axios from "axios";
+    import UpdateProductModal from "./UpdateProductDialog";
+
+    const MobileCard = ({ mobile }) => {
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        try {
+        const response = await axios.delete(
+            `http://localhost:5001/api/v1/products/${mobile._id}`
+        );
+        console.log(response.data); // Handle the response data as needed
+        } catch (error) {
+        console.error("There was an error posting the product!", error);
+        }
+    };
+    return (
+        <div className="mobile-card p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+        <div className=" overflow-hidden">
+            <img
+            src={mobile.image}
+            alt={mobile.name}
+            className="w-full h-48 object-cover rounded-t-lg"
+            />
+        </div>
+        <div className="p-2">
+            <h3 className="lg:text-lg font-bold">{mobile.name}</h3>
+            <p className="mt-2 font-bold text-blue-500 text-2xl">${mobile.price}</p>
+            <p className="text-gray-600 mt-2 line-clamp-2">
+            {mobile.shortDescription}
+            </p>
+
+            <div className=" flex items-center justify-between">
+            <Link
+                to={`/mobile/${mobile._id}`}
+                className="text-blue-500 mt-4 block border border-blue-500 w-fit p-2 rounded-md px-4 hover:bg-blue-500 hover:text-white duration-200 transition-all"
+            >
+                View Details
+            </Link>
+
+            <div className=" flex items-center gap-2">
+                <UpdateProductModal mobile={mobile} />
+                <DeleteButton onClick={handleDelete} />
+            </div>
+            </div>
+        </div>
+        </div>
+    );
+    };
+
+    export default MobileCard;
+
 ```

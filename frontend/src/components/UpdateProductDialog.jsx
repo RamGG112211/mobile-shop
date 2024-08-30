@@ -1,22 +1,24 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import { RxCross2 } from "react-icons/rx";
 import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import axios from "axios"; // If you prefer axios
+import UpdateButton from "./updateButton";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AddProductModal = () => {
+const UpdateProductModal = ({ mobile }) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [product, setProduct] = useState({
-    name: "",
-    price: "",
-    image: "",
-    shortDescription: "",
-    fullDescription: "",
+    name: mobile.name,
+    price: mobile.price,
+    image: mobile.image,
+    shortDescription: mobile.shortDescription,
+    fullDescription: mobile.fullDescription,
   });
 
   const handleChange = (e) => {
@@ -31,8 +33,8 @@ const AddProductModal = () => {
     console.log(product);
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:5001/api/v1/products/new",
+      const response = await axios.put(
+        `http://localhost:5001/api/v1/products/${mobile._id}`,
         product,
         {
           headers: {
@@ -56,9 +58,7 @@ const AddProductModal = () => {
 
   return (
     <div>
-      <Button className="" onClick={() => setIsOpenModal(true)}>
-        Add New Product
-      </Button>
+      <UpdateButton onClick={() => setIsOpenModal(true)} />
       <Dialog
         open={isOpenModal}
         onClose={() => setIsOpenModal(false)}
@@ -130,7 +130,7 @@ const AddProductModal = () => {
             </div>
             <div className="flex justify-end">
               <Button type="submit" variant="contained" color="primary">
-                Add Product
+                Update Product
               </Button>
               <Button
                 onClick={() => setIsOpenModal(false)}
@@ -148,4 +148,4 @@ const AddProductModal = () => {
   );
 };
 
-export default AddProductModal;
+export default UpdateProductModal;
